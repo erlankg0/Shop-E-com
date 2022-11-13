@@ -1,0 +1,10 @@
+django-js-asset==2.0.0
+django-mptt==0.14.0
+django-mptt-admin==2.3.0
+django-multiselectfield==0.1.12
+Pillow==9.3.0
+psycopg2==2.9.5
+sqlparse==0.4.3
+tzdata==2022.6
+
+Django~=4.1.3
