@@ -27,10 +27,12 @@ INSTALLED_APPS = [
     # My apps
     'products.apps.ProductsConfig',
     'auth_app.apps.AuthAppConfig',
+    'django_countries',
     # Extra apps
     'django_mptt_admin',
     'mptt',
-    'multiselectfield'
+    'multiselectfield',
+    'smart_selects',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +77,7 @@ DATABASES = {
         'PASSWORD': '123321',
         'HOST': 'localhost',
         'PORT': '5432'
-    }
+    },
 }
 
 # Password validation
@@ -112,9 +114,10 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_URL = 'access/'
-STATICFILES_DIRS = (
-        BASE_DIR / 'access'
-)
+STATIC_ROOT = BASE_DIR / 'access'
+# STATICFILES_DIRS = (
+#         BASE_DIR / 'access'
+# )
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -123,3 +126,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # MPTT
 
 MPTT_ADMIN_LEVEL_INDENT = 20
+
+# smart-select
+
+JQUERY_URL = False
+USE_DJANGO_JQUERY = True
