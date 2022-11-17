@@ -1,31 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
-
-from auth_app.country_list import province_get_by_country
-from auth_app.forms import PersonCreationForm
-from auth_app.models import Person, Country
+from django.shortcuts import render
 from django_countries import countries
 
-
-def person_create_view(request):
-    form = PersonCreationForm()
-    if request.method == 'POST':
-        form = PersonCreationForm(request.POST)
-        print(form.data)
-        if form.is_valid():
-            form.save()
-            return redirect('person_add')
-    return render(request, 'auth_app/home.html', {'form': form})
-
-
-def person_update_view(request, pk):
-    person = get_object_or_404(Person, pk=pk)
-    form = PersonCreationForm(instance=person)
-    if request.method == 'POST':
-        form = PersonCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('person_change', pk=pk)
-    return render(request, 'auth_app/home.html', {'form': form})
+from auth_app.country_list import province_get_by_country
+from auth_app.models import Country
 
 
 # AJAX
@@ -36,7 +13,8 @@ def load_countries(request):
 
 def load_provinces(request):
     country_id = request.GET.get('country_id')
-    provinces = province_get_by_country(country_id)
+    print(country_id)
+    provinces = province_get_by_country(Country.objects.get(pk=country_id).name)
     return render(request, 'auth_app/province_dropdown_list_option.html', {'provinces': provinces})
 
 

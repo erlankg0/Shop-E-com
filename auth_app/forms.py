@@ -1,13 +1,12 @@
 from django import forms
+from auth_app.models import CustomUser
 
-from auth_app.models import Person
 
-
-class PersonCreationForm(forms.ModelForm):
+class CustomUserForm(forms.ModelForm):
     class Meta:
-        model = Person
-        fields = ['name', 'country', 'province']
-
-        widgets = forms.TextInput(attrs={
-            'class': 'form-control'
-        })
+        model = CustomUser
+        fields = [
+            'first_name',
+            'last_name',
+            ''
+        ]
