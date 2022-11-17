@@ -8,5 +8,19 @@ class CustomUserForm(forms.ModelForm):
         fields = [
             'first_name',
             'last_name',
-            ''
+            'email',
+            'gender',
+            'country',
+            'province',
+            'address',
+            'phone',
+            'username',
+            'password',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'user_permissions',
+            'groups',
+            'last_login',
+            'date_joined',
         ]

@@ -31,6 +31,7 @@ class CustomUser(AbstractUser):
     gender = models.CharField(
         max_length=20,
         verbose_name='Пол',
+        choices=GENDERS,
     )
     email = models.EmailField(
         max_length=256,

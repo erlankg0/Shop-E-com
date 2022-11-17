@@ -1,8 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django_countries import countries
 
 from auth_app.country_list import province_get_by_country
 from auth_app.models import Country
+from auth_app.forms import CustomUserForm
+
+
+def create_user(request):
+    form = CustomUserForm()
+    if request.method == 'POST':
+        form = CustomUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    return render(request, 'auth_app/home.html', {"form": form})
 
 
 # AJAX
