@@ -36,3 +36,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.Ip)
+class IpAdmin(admin.ModelAdmin):
+    pass

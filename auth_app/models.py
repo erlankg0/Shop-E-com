@@ -58,6 +58,15 @@ class CustomUser(AbstractUser):
         max_length=155,
         verbose_name='Область'
     )
+    post_code = models.CharField(
+        max_length=40,
+        verbose_name='Почтовый код',
+
+    )
+    city = models.CharField(
+        max_length=150,
+        verbose_name='Название города'
+    )
     address = models.CharField(
         max_length=255,
         verbose_name='Адрес',

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class=" section-padding-80">
+        <div class="container">
+            <div class="row justify-content-center">
+
+
+                <div class="checkout_details_area mt-50 clearfix">
+
+                    <div class="cart-page-heading mb-30">
+                        <h5>Billing Address</h5>
+                    </div>
+                    <form method="post" data-provinces-url="{% url 'ajax_load_provinces' %}" id="custom_user">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_first_name">First Name <span>*</span></label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name">Last Name <span>*</span></label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="id_gender">Gender</label>
+                                {{ form.gender }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_email">E-Mail <span>*</span></label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_phone">Phone No <span>*</span></label>
+                                {{ form.phone }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="country_id">Country <span>*</span></label>
+                                {{ form.country }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="street_address">Province <span>*</span></label>
+                                {{ form.province }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="id_city">Town/City <span>*</span></label>
+                                {{ form.city }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="id_post_code">Postcode <span>*</span></label>
+                                {{ form.post_code }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="id_address">Address <span>*</span></label>
+                                {{ form.address }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name">User Name <span>*</span></label>
+                                {{ form.username }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name">Password <span>*</span></label>
+                                {{ form.password }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                {{ form.date_joined }}
+                            </div>
+
+                            <div class="col-12">
+                                <div class="custom-control custom-checkbox d-block mb-2">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    <label class="custom-control-label" for="customCheck1">Terms and conitions</label>
+                                </div>
+                                <div class="custom-control custom-checkbox d-block mb-2">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                    <label class="custom-control-label" for="customCheck2">Create an accout</label>
+                                </div>
+                                <div class="custom-control custom-checkbox d-block">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck3">
+                                    <label class="custom-control-label" for="customCheck3">Subscribe to our
+                                        newsletter</label>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="btn essence-btn"> Регистрация</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--AJAX-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </script>
+    <script>
+        $("#country_id").change(function () {
+            const url = $("#custom_user").attr("data-provinces-url");  // get the url of the `load_provinces` view
+            const countryId = $(this).val();  // get the selected country ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                data: {
+                    'country_id': countryId       // add the country id to the GET parameters
+                },
+                success: function (data) {   // `data` is the return of the `load_cities` view function
+                    $("#province_id").html(data);  // replace the contents of the city input with the data that came from the server
+                }
+            });
+
+        });
+
+    </script>
+{% endblock %}

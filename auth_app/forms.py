@@ -1,6 +1,8 @@
 from django import forms
-from auth_app.models import CustomUser, Phone
 from django.forms.models import formset_factory
+from django.utils.timezone import now
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from auth_app.models import CustomUser, Phone
 
 
 class PhoneForm(forms.ModelForm):
@@ -12,6 +14,12 @@ class PhoneForm(forms.ModelForm):
 PhoneFormSet = formset_factory(PhoneForm, extra=2, max_num=2, min_num=1)
 
 
+class CustomUserFormAuth(AuthenticationForm, forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'password',)
+
+
 class CustomUserForm(forms.ModelForm):
     class Meta:
         model = CustomUser
@@ -20,8 +28,11 @@ class CustomUserForm(forms.ModelForm):
             'last_name',
             'email',
             'gender',
+            'phone',
             'country',
             'province',
+            'city',
+            'post_code',
             'address',
             'username',
             'password',
@@ -33,11 +44,7 @@ class CustomUserForm(forms.ModelForm):
             'last_login',
             'date_joined',
         ]
-        exclude = [
-            'phone'
-        ]
         widgets = {
-
             'first_name': forms.TextInput(
                 attrs={
                     'class': 'form-control'
@@ -58,8 +65,9 @@ class CustomUserForm(forms.ModelForm):
             ),
             'phone': forms.TextInput(
                 attrs={
-                    'type': 'tel',
+                    'type': 'number',
                     'class': 'form-control',
+                    'min': '0',
                 }
             ),
             'email': forms.EmailInput(
@@ -81,6 +89,18 @@ class CustomUserForm(forms.ModelForm):
                     'id': 'province_id',
                 }
             ),
+            'post_code': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'number',
+                }
+            ),
+            'city': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'address',
+                }
+            ),
             'address': forms.TextInput(
                 attrs={
                     'class': 'form-control',
@@ -96,4 +116,19 @@ class CustomUserForm(forms.ModelForm):
                     'class': 'form-control'
                 }
             ),
+            'date_joined': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'value': now,
+                    'readonly': '',
+
+                }
+            )
         }
+
+    def save(self, commit=True):
+        custom_user = super().save(commit=False)
+        custom_user.set_password(self.cleaned_data['password'])
+        if commit:
+            custom_user.save()
+        return custom_user

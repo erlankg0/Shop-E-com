@@ -113,6 +113,16 @@ class Quantity(models.Model):
         return str(self.quantity)
 
 
+class Ip(models.Model):  # Таблица где будут ip адреса
+    ip = models.CharField(
+        max_length=46,
+        verbose_name='IP'
+    )
+
+    def __str__(self):
+        return self.ip
+
+
 class Product(models.Model):
     image = models.ManyToManyField(
         'Image',
@@ -166,9 +176,10 @@ class Product(models.Model):
         default=0,
         verbose_name='Проданно',
     )
-    view = models.PositiveIntegerField(
-        default=0,
-        verbose_name='Просмотры',
+    view = models.ManyToManyField(
+        Ip,
+        verbose_name='Ip viewed',
+        help_text='Тут будут хранится все ip адреса, которые смотрели продукт'
     )
 
     publication_date = models.DateField(
@@ -179,6 +190,9 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={"slug": self.slug})
+
+    def total_views(self):
+        return self.view.count()
 
     def __str__(self):
         return f"{self.title} - {self.brand}"
