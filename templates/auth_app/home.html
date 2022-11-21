@@ -1,29 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form method="post" id="personForm" data-provinces-url="{% url 'ajax_load_provinces' %}"
-          data-countries-url="{% url "ajax_load_countries" %}"
-          data-countries-with_provinces-url="{% url 'ajax_load_country_with_provinces' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit">
-    </form>
+    <div class="checkout_area section-padding-80">
+        <div class="container">
+            <div class="row">
+                <div class="checkout_details_area mt-50 clearfix">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script>
-        $("#id_country").change(function () {
-            const url = $("#personForm").attr("data-provinces-url");  // get the url of the `load_cities` view
-            const countryId = $(this).val();  // get the selected country ID from the HTML input
+                    <div class="cart-page-heading mb-30">
+                        <h5>Billing Address</h5>
+                    </div>
+                    <form method="post" id="personForm" data-provinces-url="{% url 'ajax_load_provinces' %}"
+                          data-countries-url="{% url "ajax_load_countries" %}"
+                          data-countries-with_provinces-url="{% url 'ajax_load_country_with_provinces' %}">
+                        {% csrf_token %}
+                        {{ phone.as_p }}
+                        {{ person.as_p }}
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Checkout Area End ##### -->
 
-            $.ajax({                       // initialize an AJAX request
-                url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
-                data: {
-                    'country_id': countryId       // add the country id to the GET parameters
-                },
-                success: function (data) {   // `data` is the return of the `load_cities` view function
-                    $("#id_province").html(data);  // replace the contents of the city input with the data that came from the server
-                }
-            });
-
-        });
-    </script>
 {% endblock %}

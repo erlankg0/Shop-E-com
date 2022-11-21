@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class Phone(models.Model):
@@ -12,6 +12,13 @@ class Phone(models.Model):
     def __str__(self):
         return self.number
 
+
+# Auto Write all country from django_countries import countries
+# for country in countries.countries.values():
+#     country = Country()
+#     country.name = country
+#     country.save()
+#     country = None
 
 class Country(models.Model):
     name = models.CharField(
@@ -57,11 +64,11 @@ class CustomUser(AbstractUser):
         help_text='Город - улица - дом/кв'
 
     )
-    phone = models.ManyToManyField(
-        Phone,
-        related_name='phone'
-
+    phone = models.CharField(
+        max_length=50,
+        verbose_name='Номер телефона',
+        unique=True
     )
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.phone.name}"
+        return f"{self.first_name} {self.last_name} - {self.phone}"

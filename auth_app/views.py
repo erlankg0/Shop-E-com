@@ -1,38 +1,47 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
+from django.views import View
 from django_countries import countries
 
 from auth_app.country_list import province_get_by_country
+from auth_app.forms import CustomUserForm, PhoneFormSet
 from auth_app.models import Country
-from auth_app.forms import CustomUserForm
 
 
-def create_user(request):
-    form = CustomUserForm()
-    if request.method == 'POST':
-        form = CustomUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-    return render(request, 'auth_app/home.html', {"form": form})
+class CustomUserFormView(View):
+    form = CustomUserForm
+    formset = PhoneFormSet
+
+    def get(self, request):
+        return render(request, 'auth_app/auth.html', context={"form": self.form, "formset": self.formset})
+
+    def post(self, request):
+        self.form = self.form(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            return redirect('/success')
+        return render(request, 'auth_app/auth.html', context={"form": self.form, "formset": self.formset})
+
+
+# def person(request):
+#     phone_form = PhoneForm()
+#     person_form = formset_factory(PhoneForm, extra=2)
+#     if request.method == 'POST':
+#         person_form = PersonForm(request.POST)
+#         phone_form = PhoneForm(request.POST)
+#         print(phone_form)
+#         if person_form.is_valid() and phone_form.is_valid():
+#             phone = phone_form.save(commit=False)
+#             phone.save()
+#             person_ = person_form.save(commit=False)
+#             person_.save()
+#             person_.phone.add(phone)
+#             return redirect('/')
+#     return render(request, 'auth_app/home.html', {"phone": phone_form, 'person': person_form})
 
 
 # AJAX
-def load_countries(request):
-    print('LOAD_COUNTRIES')
-    return render(request, 'auth_app/countries.html', {'countries': countries.countries.values()})
-
 
 def load_provinces(request):
     country_id = request.GET.get('country_id')
-    print(country_id)
     provinces = province_get_by_country(Country.objects.get(pk=country_id).name)
     return render(request, 'auth_app/province_dropdown_list_option.html', {'provinces': provinces})
-
-
-def load_country_with_provinces(request):
-    if request.GET.get('country_id'):
-        provinces = province_get_by_country(Country.objects.get(name=request.GET.get('country_id')))
-        return render(request, 'auth_app/province_dropdown_list_option.html',
-                      context={"provinces": provinces})
-    else:
-        return render(request, 'auth_app/countries.html', context={"countries": countries.countries.values()})
