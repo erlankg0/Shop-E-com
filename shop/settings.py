@@ -1,5 +1,6 @@
 import os.path
 from pathlib import Path
+
 import psycopg2
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,8 +29,9 @@ INSTALLED_APPS = [
     # My apps
     'products.apps.ProductsConfig',
     'auth_app.apps.AuthAppConfig',
-    'django_countries',
     # Extra apps
+    'django_countries',
+    'ajax_select',
     'django_mptt_admin',
     'mptt',
     'multiselectfield',
