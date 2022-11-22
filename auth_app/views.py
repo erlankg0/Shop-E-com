@@ -1,29 +1,39 @@
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render
-from django.views.generic import FormView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
 from auth_app.country_list import province_get_by_country
-from auth_app.forms import CustomUserForm, CustomUserFormAuth
+from auth_app.forms import CustomUserFormAuth, CustomUserCreationForm
 from auth_app.models import Country
 
 
-class LoginViewCustomerUser(LoginView):
-    template_name = 'auth_app/login.html'
-    form_class = CustomUserFormAuth
-    success_url = '/'
+class SingUpView(CreateView):
+    template_name = 'auth_app/register.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('home')
 
     def get_success_url(self):
         return self.success_url
 
 
-class UserFormView(FormView):
-    template_name = 'auth_app/countries.html'
-    form_class = CustomUserForm
-    success_url = '/success'
+class LoginViewCustomerUser(LoginView):
+    template_name = 'auth_app/login.html'
+    form_class = CustomUserFormAuth
+    success_url = reverse_lazy('home')
 
-    def form_valid(self, form):
-        form.save()
-        return super(UserFormView, self).form_valid(form)
+    def get_success_url(self):
+        return self.success_url
+
+
+# class UserFormView(FormView):
+#     template_name = 'auth_app/countries.html'
+#     form_class = CustomUserForm
+#     success_url = '/success'
+#
+#     def form_valid(self, form):
+#         form.save()
+#         return super(UserFormView, self).form_valid(form)
 
 
 # class CustomUserFormView(View):

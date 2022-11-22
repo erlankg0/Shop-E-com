@@ -30,6 +30,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', )
     prepopulated_fields = {"slug": ('title', 'size', 'category',)}
 
 

@@ -73,9 +73,25 @@
                 <a href="#"><img src="{% static 'products/img/core-img/heart.svg' %}" alt=""></a>
             </div>
             <!-- User Login Info -->
-            <div class="user-login-info">
-                <a href="{% url 'login_auth' %}"><img src="{% static 'products/img/core-img/user.svg' %}" alt=""></a>
-            </div>
+            {% if user.is_authenticated %}
+                <div class="user-login-info">
+                    <a href="{% url 'logout' %}">
+                        <img src="{% static 'products/img/core-img/exit.svg' %}">
+                    </a>
+                </div>
+            {% else %}
+                <div class="user-login-info">
+                    <a href="{% url 'login_auth' %}">
+                        <img src="{% static 'products/img/core-img/login-svgrepo-com.svg' %}">
+                    </a>
+                </div>
+                <div class="user-login-info">
+                    <a href="{% url 'signup_auth' %}">
+                        <img src="{% static 'products/img/core-img/user.svg' %}">
+                    </a>
+                </div>
+            {% endif %}
+
             <!-- Cart Area -->
             <div class="cart-area">
                 <a href="#" id="essenceCartBtn"><img src="{% static 'products/img/core-img/bag.svg' %}" alt="">
