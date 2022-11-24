@@ -1,12 +1,13 @@
 {% load static %}
 {% load category_tags %}
-{% load mptt_tags %}
+{% load  mptt_tags %}
 <header class="header_area">
     <div class="classy-nav-container d-flex align-items-center justify-content-between light left breakpoint-off">
         <!-- Classy Menu -->
         <nav class="classy-navbar" id="essenceNav">
             <!-- Logo -->
-            <a class="nav-brand" href="#"><img src="{% static 'products/img/core-img/logo.png' %}" alt=""></a>
+            <a class="nav-brand" href="{% url 'home' %}"><img src="{% static 'products/img/core-img/logo.png' %}"
+                                                              alt=""></a>
             <!-- Navbar Toggler -->
             <div class="classy-navbar-toggler">
                 <span class="navbarToggler active"><span></span><span></span><span></span></span>
@@ -19,38 +20,17 @@
                 </div>
                 <!-- Nav Start -->
                 <div class="classynav">
+                    {% get_categories as categories %}
                     <ul>
-                        <li class="megamenu-item active"><a href="#">Shop</a>
-                            <div class="megamenu" style="display: block;">
-                                {% get_categories as categories %}
-                                {% recursetree categories %}
-                                    <ul class="single-mega cn-col-4">
-
-                                        <li class="title">{{ node.title }}</li>
-                                        {% if not node.is_leaf_node %}
-                                            <li><a href="{{ children.get_absolute.url }}">{{ children }}</a></li>
-                                        {% endif %}
-
+                        {% recursetree categories %}
+                            <li class="cn-dropdown-item has-down pr12"><a href="{{ node.get_absolute_url }}">{{ node.title }}</a>
+                                {% if not node.is_leaf_node %}
+                                    <ul class="dropdown">
+                                        <li class="children"><a href="{{ children.get_absolute_url }}">{{ children }}</a></li>
                                     </ul>
-                                {% endrecursetree %}
-
-                                <div class="single-mega cn-col-4">
-                                    <img src="img/bg-img/bg-6.jpg" alt="">
-                                </div>
-                            </div>
-                            <span class="dd-trigger"></span><span class="dd-arrow"></span></li>
-                        <li class="cn-dropdown-item has-down pr12"><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="shop.html">Shop</a></li>
-                                <li><a href="single-product-details.html">Product Details</a></li>
-                                <li><a href="checkout.html">Checkout</a></li>
-                                <li><a href="blog.html">Blog</a></li>
-                                <li><a href="single-blog.html">Single Blog</a></li>
-                                <li><a href="regular-page.html">Regular Page</a></li>
-                                <li><a href="contact.html">Contact</a></li>
-                            </ul>
-                            <span class="dd-trigger"></span><span class="dd-arrow"></span></li>
+                                {% endif %}
+                            </li>
+                        {% endrecursetree %}
                         <li><a href="blog.html">Blog</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>

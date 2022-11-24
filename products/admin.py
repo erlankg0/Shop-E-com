@@ -30,8 +30,25 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', )
+    list_display = ('title', 'price',)
     prepopulated_fields = {"slug": ('title', 'size', 'category',)}
+    fieldsets = (
+        ('Название продукта', {
+            'fields': ('title', 'description', 'article', 'brand', 'publication_date', 'slug',)
+        }),
+        ('Категории', {
+            'fields': ('category', 'age_group',)
+        }),
+        ('Цена', {
+            'fields': ('price', 'discount_price', 'discount',)
+        }),
+        ('Размер', {
+            'fields': ('size', 'sold',)
+        }),
+        ('Просмотры и нравится', {
+            'fields': ('view',)
+        })
+    )
 
 
 @admin.register(models.Image)

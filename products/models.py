@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
+from auth_app.models import CustomUser
 from products.utils import brand_name_directory_path, product_name_directory_path
 from products.utils import get_sizes
 
@@ -34,6 +35,21 @@ class Age(models.Model):
         verbose_name_plural = 'Возраст'
 
 
+class Collection(models.Model):
+    title = models.CharField(
+        max_length=155,
+        verbose_name='Название коллекции',
+        unique=True,
+    )
+
+    slug = models.SlugField(
+        unique=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
 class Category(MPTTModel):
     title = models.CharField(
         max_length=50,
@@ -54,6 +70,9 @@ class Category(MPTTModel):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'slug': self.slug})
 
     class MPTTMeta:
         order_insertion_by = ['title']
@@ -123,6 +142,16 @@ class Ip(models.Model):  # Таблица где будут ip адреса
         return self.ip
 
 
+class Like(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.user.username
+
+
 class Product(models.Model):
     image = models.ManyToManyField(
         'Image',
@@ -153,6 +182,11 @@ class Product(models.Model):
         Category,
         verbose_name='Категория'
     )
+    collection = models.OneToOneField(
+        Collection,
+        on_delete=models.CASCADE,
+        verbose_name='Коллекция'
+    )
     age_group = models.ManyToManyField(
         Age,
         verbose_name='Возрастная группа'
@@ -179,7 +213,15 @@ class Product(models.Model):
     view = models.ManyToManyField(
         Ip,
         verbose_name='Ip viewed',
-        help_text='Тут будут хранится все ip адреса, которые смотрели продукт'
+        help_text='Тут будут хранится все ip адреса, которые смотрели продукт',
+        blank=True,
+        null=True,
+    )
+    liked = models.ManyToManyField(
+        Like,
+        verbose_name='Like',
+        blank=True,
+        null=True,
     )
 
     publication_date = models.DateField(
@@ -193,6 +235,12 @@ class Product(models.Model):
 
     def total_views(self):
         return self.view.count()
+
+    def total_like(self):
+        return self.liked.count()
+
+    def liked_users(self):
+        return self.liked.all()
 
     def __str__(self):
         return f"{self.title} - {self.brand}"
