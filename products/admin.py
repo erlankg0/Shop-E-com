@@ -2,7 +2,6 @@ from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
 
 from products import models
-from products.forms import QuantityForm, SizeForm
 
 
 @admin.register(models.Age)
@@ -27,17 +26,12 @@ class SizeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Quantity)
 class QuantityAdmin(admin.ModelAdmin):
-    form = QuantityForm
+    pass
 
 
 @admin.register(models.Brand)
 class BrandAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
-
-
-@admin.register(models.Color)
-class ColorAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(models.Product)

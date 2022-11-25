@@ -100,7 +100,7 @@ class Category(MPTTModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('product_detail', kwargs={'slug': self.slug})
+        return reverse('get_by_category', kwargs={'slug': self.slug})
 
     class MPTTMeta:
         order_insertion_by = ['title']
@@ -133,25 +133,6 @@ class Brand(models.Model):
         verbose_name_plural = 'Бренды'
 
 
-class Color(models.Model):
-    COLOR = (
-        ('BLACK', 'BLACK'),
-        ('WHITE', 'WHITE'),
-        ('GRAY', 'GRAY'),
-        ('BEIGE', 'BEIGE'),
-        ('RED', 'RED'),
-        ('BLUE', 'BLUE'),
-    )
-    color = models.CharField(
-        max_length=10,
-        verbose_name='Выбор цвета',
-        choices=COLOR,
-    )
-
-    def __str__(self):
-        return self.color
-
-
 class Size(models.Model):
     """Размер продукта"""
     size = models.CharField(
@@ -166,20 +147,12 @@ class Size(models.Model):
         on_delete=models.CASCADE,
 
     )
-    color = models.OneToOneField(
-        'Color',
-        related_name='color_size',
-        blank=True,
-        null=True,
-        on_delete=models.CASCADE,
-
-    )
 
     class Meta:
-        unique_together = ('size', 'color', 'count',)
+        unique_together = ('size', 'count',)
 
     def __str__(self):
-        return f"Size: {self.size} - Quantity: {self.count.quantity} - Color: {self.color.color}"
+        return f"Size: {self.size} - Quantity: {self.count.quantity}"
 
 
 class Quantity(models.Model):
@@ -217,6 +190,14 @@ class Like(models.Model):
 
 class Product(models.Model):
     """Продукт - товар"""
+    COLOR = (
+        ('BLACK', 'BLACK'),
+        ('WHITE', 'WHITE'),
+        ('GRAY', 'GRAY'),
+        ('BEIGE', 'BEIGE'),
+        ('RED', 'RED'),
+        ('BLUE', 'BLUE'),
+    )
     image = models.ManyToManyField(
         'Image',
         verbose_name='Изображение продукта',
@@ -244,13 +225,21 @@ class Product(models.Model):
     )
     category = models.ManyToManyField(
         Category,
-        verbose_name='Категория'
+        verbose_name='Категория',
+        related_name='get_product_by_categories'
     )
     collection = models.OneToOneField(
         Collection,
         on_delete=models.CASCADE,
         verbose_name='Коллекция'
     )
+
+    color = models.CharField(
+        max_length=10,
+        verbose_name='Выбор цвета',
+        choices=COLOR,
+    )
+
     age_group = models.ManyToManyField(
         Age,
         verbose_name='Возрастная группа'

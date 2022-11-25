@@ -34,18 +34,13 @@
                 <div class="select-box d-flex mt-50 mb-30">
                     <select name="select" id="productSize" class="mr-5">
                         {% for size in product.size.all %}
-                            <option value="{{ size }}">Size: {{ size }}</option>
+                            <option value="{{ size.pk }}">Size: {{ size }}</option>
                         {% endfor %}
                     </select>
                     <select name="select" id="productColor">
-                        {% for color in product.objects.c %}
-
+                        {% for color in product.size.all %}
+                            <option value="value">Color: {{ color.color_size.all }}</option>
                         {% endfor %}
-
-                        <option value="value">Color: Black</option>
-                        <option value="value">Color: White</option>
-                        <option value="value">Color: Red</option>
-                        <option value="value">Color: Purple</option>
                     </select>
                 </div>
                 <!-- Cart & Favourite Box -->
