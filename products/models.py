@@ -6,8 +6,34 @@ from auth_app.models import CustomUser
 from products.utils import brand_name_directory_path, product_name_directory_path
 from products.utils import get_sizes
 
+"""Модели SQL Продуктов - Товаров"""
+
+"""
+Возрастная группа
+
+Коллекция продукта
+
+Категория продукта
+
+Бренд продукта (производитель)
+
+Размер продукта
+
+Колличество продукта привязанно к размеру
+
+Ip адрес получения ip адреса пользователя
+
+Нравится
+
+Продукт (товар)
+
+Картинка (для товара)
+
+"""
+
 
 class Age(models.Model):
+    """Возрастная группа"""
     AGE = (
         ("Adult", 'Adult'),
         ("Kids", 'Kids'),
@@ -36,6 +62,7 @@ class Age(models.Model):
 
 
 class Collection(models.Model):
+    """Коллекция продукта"""
     title = models.CharField(
         max_length=155,
         verbose_name='Название коллекции',
@@ -51,6 +78,7 @@ class Collection(models.Model):
 
 
 class Category(MPTTModel):
+    """Категория продукта"""
     title = models.CharField(
         max_length=50,
         unique=True,
@@ -83,6 +111,7 @@ class Category(MPTTModel):
 
 
 class Brand(models.Model):
+    """Бренд продукта (производитель)"""
     title = models.CharField(
         max_length=100,
         unique=True,
@@ -104,7 +133,27 @@ class Brand(models.Model):
         verbose_name_plural = 'Бренды'
 
 
+class Color(models.Model):
+    COLOR = (
+        ('BLACK', 'BLACK'),
+        ('WHITE', 'WHITE'),
+        ('GRAY', 'GRAY'),
+        ('BEIGE', 'BEIGE'),
+        ('RED', 'RED'),
+        ('BLUE', 'BLUE'),
+    )
+    color = models.CharField(
+        max_length=10,
+        verbose_name='Выбор цвета',
+        choices=COLOR,
+    )
+
+    def __str__(self):
+        return self.color
+
+
 class Size(models.Model):
+    """Размер продукта"""
     size = models.CharField(
         max_length=10,
         choices=get_sizes()
@@ -115,14 +164,26 @@ class Size(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
-        unique=True,
+
+    )
+    color = models.OneToOneField(
+        'Color',
+        related_name='color_size',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+
     )
 
+    class Meta:
+        unique_together = ('size', 'color', 'count',)
+
     def __str__(self):
-        return self.size
+        return f"Size: {self.size} - Quantity: {self.count.quantity} - Color: {self.color.color}"
 
 
 class Quantity(models.Model):
+    """Колличество продукта привязанно к размеру"""
     quantity = models.PositiveIntegerField()
 
     def __int__(self):
@@ -133,6 +194,7 @@ class Quantity(models.Model):
 
 
 class Ip(models.Model):  # Таблица где будут ip адреса
+    """Ip адрес получения ip адреса пользователя"""
     ip = models.CharField(
         max_length=46,
         verbose_name='IP'
@@ -143,6 +205,7 @@ class Ip(models.Model):  # Таблица где будут ip адреса
 
 
 class Like(models.Model):
+    """Нравится"""
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -153,6 +216,7 @@ class Like(models.Model):
 
 
 class Product(models.Model):
+    """Продукт - товар"""
     image = models.ManyToManyField(
         'Image',
         verbose_name='Изображение продукта',
@@ -252,6 +316,7 @@ class Product(models.Model):
 
 
 class Image(models.Model):
+    """Картинка"""
     image = models.ImageField(
         upload_to=product_name_directory_path,
         verbose_name='Логотип'

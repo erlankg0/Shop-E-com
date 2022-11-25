@@ -380,7 +380,9 @@ $('li.children').each(function (){
 <!-- Bootstrap js -->
 <script src="{% static 'products/js/bootstrap.min.js' %}"></script>
 {#<!-- Plugins js -->#}
-{#<script src="{% static 'products/js/plugins.js' %}"></script> <!--nice-select plugin i don't know how is work-->#}
+{% block plugins_js %}
+
+{% endblock %}
 {#<!-- Classy Nav js -->#}
 <script src="{% static 'products/js/classy-nav.min.js' %}"></script>
 <!-- Active js -->

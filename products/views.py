@@ -1,10 +1,11 @@
 from django.shortcuts import render
+from django.views.generic import DetailView
 from django.views.generic.list import ListView
 
 from products.models import Product, Ip
 
 
-# Метод для получения ip
+# Метод для получения ip адреса
 
 def get_client_ip(request):
     http_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -19,6 +20,12 @@ def get_client_ip(request):
 class HomeView(ListView):
     template_name = 'products/index.html'
     model = Product
+
+
+class DetailViewProduct(DetailView):
+    model = Product
+    context_object_name = 'product'
+    template_name = 'products/product_detail.html'
 
 
 def product_detail(request, slug):

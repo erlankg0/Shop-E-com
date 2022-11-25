@@ -1,6 +1,8 @@
 from django.contrib import admin
-from products import models
 from django_mptt_admin.admin import DjangoMpttAdmin
+
+from products import models
+from products.forms import QuantityForm, SizeForm
 
 
 @admin.register(models.Age)
@@ -13,6 +15,11 @@ class CategoryAdmin(DjangoMpttAdmin):
     prepopulated_fields = {"slug": ("title", 'parent',)}
 
 
+@admin.register(models.Collection)
+class Collection(admin.ModelAdmin):
+    pass
+
+
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
     pass
@@ -20,12 +27,17 @@ class SizeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Quantity)
 class QuantityAdmin(admin.ModelAdmin):
-    pass
+    form = QuantityForm
 
 
 @admin.register(models.Brand)
 class BrandAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(models.Color)
+class ColorAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(models.Product)
@@ -37,7 +49,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('title', 'description', 'article', 'brand', 'publication_date', 'slug',)
         }),
         ('Категории', {
-            'fields': ('category', 'age_group',)
+            'fields': ('category', 'age_group', 'collection', 'image',)
         }),
         ('Цена', {
             'fields': ('price', 'discount_price', 'discount',)
