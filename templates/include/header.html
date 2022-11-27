@@ -1,6 +1,6 @@
 {% load static %}
 {% load category_tags %}
-{% load  mptt_tags %}
+{% load mptt_tags %}
 <header class="header_area">
     <div class="classy-nav-container d-flex align-items-center justify-content-between light left breakpoint-off">
         <!-- Classy Menu -->
@@ -23,10 +23,12 @@
                     {% get_categories as categories %}
                     <ul>
                         {% recursetree categories %}
-                            <li class="cn-dropdown-item has-down pr12"><a href="{{ node.get_absolute_url }}">{{ node.title }}</a>
+                            <li class="cn-dropdown-item has-down pr12"><a
+                                    href="{{ node.get_absolute_url }}">{{ node.title }}</a>
                                 {% if not node.is_leaf_node %}
                                     <ul class="dropdown">
-                                        <li class="children"><a href="{{ children.get_absolute_url }}">{{ children }}</a></li>
+                                        <li class="children"><a
+                                                href="{{ children.get_absolute_url }}">{{ children }}</a></li>
                                     </ul>
                                 {% endif %}
                             </li>

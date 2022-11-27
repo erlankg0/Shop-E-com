@@ -3,7 +3,6 @@
 {% load brands %}
 {% load category_tags %}
 {% load mptt_tags %}
-{% get_categories as categories %}
 {% block content %}
     <!-- ##### Right Side Cart Area ##### -->
     <div class="cart-bg-overlay"></div>
@@ -89,10 +88,10 @@
     <!-- ##### Breadcumb Area Start ##### -->
     <div class="breadcumb_area bg-img" style="background-image: url({% static 'products/img/bg-img/breadcumb.jpg' %});">
         <div class="container h-100">
-            <div class="row h-100 align-items-center">
+            <div class="row h-100 align-items-center mt-70">
                 <div class="col-12">
                     <div class="page-title text-center">
-                        <h2>dresses</h2>
+                        <h2>{{ category_name }}</h2>
                     </div>
                 </div>
             </div>
@@ -109,32 +108,39 @@
                         <!-- ##### Single Widget ##### -->
                         <div class="widget catagory mb-50">
                             <!-- Widget Title -->
-                            <h6 class="widget-title mb-30">Catagories</h6>
+                            <h6 class="widget-title mb-30">Категории</h6>
 
-                            <!--  Catagories  -->
+                            <!--  Categories  -->
                             <div class="catagories-menu">
+                                {% get_categories as categories %}
                                 <ul id="menu-content2" class="menu-content collapse show">
-                                    <!-- Single Item -->
-                                    {% for category in categories %}
-                                        <li data-toggle="collapse" data-target="#clothing">
-                                            <a href="#">{{ category }}</a>
-                                            <ul class="sub-menu collapse show" id="clothing">
-                                                <li><a href="#">{{ category }}</a></li>
+                                    {% recursetree categories %}
+                                        <!-- Single Item -->
+                                        <li class="cn-dropdown-item has-down pr12">
+                                            <a href="{{ node.get_absolute_url }}">{{ node.title }}</a>
+                                            <ul class="sub-menu collapse show">
+                                                {% if node.is_root_node %}
+                                                    {% if not node.is_leaf_node %}
+                                                        <ul class="bg-transparent">
+                                                            <li class="children">
+                                                                <a
+                                                                   href="{{ children.get_absolute_url }}">
+                                                                    {{ children }}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    {% endif %}
+                                                {% endif %}
                                             </ul>
                                         </li>
-                                    {% endfor %}
-
-
-
+                                    {% endrecursetree category_name %}
                                 </ul>
                             </div>
                         </div>
 
-                        <!-- ##### Single Widget ##### -->
                         <div class="widget price mb-50">
                             <!-- Widget Title -->
                             <h6 class="widget-title mb-30">Filter by</h6>
-                            <!-- Widget Title 2 -->
                             <p class="widget-title2 mb-30">Price</p>
 
                             <div class="widget-desc">
@@ -152,14 +158,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- ##### Single Widget ##### -->
                         <div class="widget color mb-50">
                             <!-- Widget Title 2 -->
                             <p class="widget-title2 mb-30">Color</p>
                             <div class="widget-desc">
                                 <ul class="d-flex">
-                                    <li><a href="#" class="color1"></a></li>
+                                    <li><a href="#" style="background-color: {{ pass }}" class="color"></a></li>
                                     <li><a href="#" class="color2"></a></li>
                                     <li><a href="#" class="color3"></a></li>
                                     <li><a href="#" class="color4"></a></li>
@@ -197,10 +201,9 @@
                                     <div class="total-products">
                                         <p><span>{{ products_by_category.count }}</span> products found</p>
                                     </div>
-                                    <!-- Sorting -->
                                     <div class="product-sorting d-flex">
                                         <p>Sort by:</p>
-                                        <form action="#" method="get">
+                                        <form action="" method="get">
                                             <select name="select" id="sortByselect">
                                                 <option value="value">Рейтинг</option>
                                                 <option value="value">Новые</option>
@@ -217,14 +220,14 @@
 
                         <div class="row">
                             {% for product in products_by_category %}
-                                <!-- Single Product -->
+
                                 <div class="col-12 col-sm-6 col-lg-4">
                                     <div class="single-product-wrapper">
-                                        <!-- Product Image -->
+
                                         <div class="product-img">
 
                                             <img src="{{ product.image.first.image.url }}" alt="{{ product.title }}">
-                                            <!-- Hover Thumb -->
+
                                             <img class="hover-img"
                                                  src="{{ product.image.first.image.url }}" alt="{{ product.title }}">
 
@@ -281,5 +284,5 @@
     <!-- ##### Shop Grid Area End ##### -->
 {% endblock %}
 {% block plugins_js %}
-    <script src="{% static 'products/js/plugins.js' %}"></script> <!--nice-select plugin i don't know how is work-->
+    <script src="{% static 'products/js/plugins.js' %}"></script>
 {% endblock %}

@@ -1,5 +1,6 @@
+from django.core.checks import messages
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from mptt.models import MPTTModel, TreeForeignKey
 
 from auth_app.models import CustomUser
@@ -102,10 +103,29 @@ class Category(MPTTModel):
     def get_absolute_url(self):
         return reverse('get_by_category', kwargs={'slug': self.slug})
 
+    def save(self, *args, **kwargs):
+        """Проверка уровня вложености. Максимальная вложеность `children`(parent) 2"""
+        flag_movie = False
+        flag_save = False
+        if not self.parent.level >= 1:
+            flag_save = True
+        else:
+            flag_save = False
+        if self.get_level() <= 1:
+            flag_movie = True
+        else:
+            flag_movie = False
+        if flag_movie and flag_save:
+            super(Category, self).save(*args, **kwargs)
+        else:
+            """На сделать тут так что бы было просто вывод message.ERROR в админ панели. Без сохранения"""
+            raise ValueError("Достигнута максимальная вложеность")
+
     class MPTTMeta:
         order_insertion_by = ['title']
 
     class Meta:
+        unique_together = ['title', 'parent']
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 

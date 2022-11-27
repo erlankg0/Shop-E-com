@@ -2,7 +2,14 @@ from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 
-from products.models import Product, Ip
+from products.models import Product, Ip, Category
+
+"""Попытка получится все категории"""
+
+
+class Categories:
+    def get_categories(self):
+        queryset = Category.objects.all()
 
 
 # Метод для получения ip адреса
@@ -52,6 +59,12 @@ class CategoryProductListView(ListView):
     def get_queryset(self, *args, **kwargs):
         queryset = Product.objects.filter(category__slug__contains=self.kwargs['slug'])
         return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CategoryProductListView, self).get_context_data(**kwargs)
+        context['category'] = Category.objects.all()
+        context['category_name'] = Category.objects.get(slug=self.kwargs['slug'])
+        return context
 
 
 def product_detail(request, slug):
