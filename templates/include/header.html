@@ -33,7 +33,7 @@
                                 {% endif %}
                             </li>
                         {% endrecursetree %}
-                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="{% url 'shop' %}">Shop</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
@@ -44,12 +44,15 @@
         <!-- Header Meta Data -->
         <div class="header-meta d-flex clearfix justify-content-end">
             <!-- Search Area -->
-            <div class="search-area">
-                <form action="#" method="post">
+            <div class="search-area ">
+                <form action="{% url 'search' %}" method="get" id="autocomplete">
                     {% csrf_token %}
-                    <input type="search" name="search" id="headerSearch" placeholder="Type for search">
+                    <input type="search" name="q" id="q"
+                           placeholder="Поиск товара...">
+
                     <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                 </form>
+                <ul class="autocomplete-result-list"></ul>
             </div>
             <!-- Favourite Area -->
             <div class="favourite-area">
@@ -81,6 +84,5 @@
                     <span>3</span></a>
             </div>
         </div>
-
     </div>
 </header>

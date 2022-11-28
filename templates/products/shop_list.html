@@ -124,7 +124,7 @@
                                                         <ul class="bg-transparent">
                                                             <li class="children">
                                                                 <a
-                                                                   href="{{ children.get_absolute_url }}">
+                                                                        href="{{ children.get_absolute_url }}">
                                                                     {{ children }}
                                                                 </a>
                                                             </li>
@@ -219,7 +219,7 @@
                         </div>
 
                         <div class="row">
-                            {% for product in products_by_category %}
+                            {% for product in products %}
 
                                 <div class="col-12 col-sm-6 col-lg-4">
                                     <div class="single-product-wrapper">
@@ -233,9 +233,12 @@
 
 
                                             <!-- Product Badge -->
-                                            <div class="product-badge offer-badge">
-                                                <span>${{ product.discount_price }}</span>
-                                            </div>
+                                            {% if product.discount %}
+                                                <div class="product-badge offer-badge">
+                                                    <span>${{ product.discount_price }}</span>
+                                                </div>
+                                            {% endif %}
+
                                             <!-- Favourite -->
                                             <div class="product-favourite">
                                                 <a href="{{ product.get_absolute_url }}" class="favme fa fa-heart"></a>
@@ -264,19 +267,40 @@
                         </div>
                     </div>
                     <!-- Pagination -->
-                    <nav aria-label="navigation">
-                        <ul class="pagination mt-50 mb-70">
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-left"></i></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">21</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
+                    {% if page_obj.has_other_pages %}
+                        <nav aria-label="navigation">
+                            <ul class="pagination mt-50 mb-70">
+                                <!--Get Previous Page -->
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-angle-left"></i></a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in paginator.page_range %}
+                                    {% if page_obj.number == page %}
+                                        <li class="page-item active"><a class="page-link"
+                                                                        href="?page={{ page }}">{{ page }}</a>
+                                        </li>
+                                    {% elif page >= page_obj.number|add:-2 and page <= page_obj.number|add:2 %}
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="?page={{ page }}">{{ page }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                <!--Get Next Page-->
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
+                                            class="fa fa-angle-right"></i></a>
+                                    </li>
+                                {% endif %}
+
+                                {#                            <li class="page-item"><a class="page-link" href="#">...</a></li>#}
+
+
+                            </ul>
+                        </nav>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

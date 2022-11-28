@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
-
+from django.db.models import Q
 from products.models import Product, Ip, Category
+from django.http import JsonResponse
 
 """Попытка получится все категории"""
 
@@ -39,7 +40,7 @@ class DetailViewProduct(DetailView):
     template_name = 'products/product_detail.html'
 
     def get_object(self, queryset=None):
-        product = Product.objects.get(slug=self.model.slug)
+        product = Product.objects.get(slug=self.kwargs['slug'])
         ip = get_client_ip(self.request)
 
         if Ip.objects.filter(ip=ip).exists():
@@ -47,14 +48,15 @@ class DetailViewProduct(DetailView):
         else:
             Ip.objects.create(ip=ip)
             product.view.add(Ip.objects.get(ip=ip))
-            return super(DetailViewProduct, self).get_object(queryset)
+            super(DetailViewProduct, self).get_object(queryset)
 
 
 # view продуктов по категории
 class CategoryProductListView(ListView):
     model = Product
-    context_object_name = 'products_by_category'
-    template_name = 'products/by_category.html'
+    paginate_by = 1
+    context_object_name = 'products'
+    template_name = 'products/shop_list.html'
 
     def get_queryset(self, *args, **kwargs):
         queryset = Product.objects.filter(category__slug__contains=self.kwargs['slug'])
@@ -64,6 +66,36 @@ class CategoryProductListView(ListView):
         context = super(CategoryProductListView, self).get_context_data(**kwargs)
         context['category'] = Category.objects.all()
         context['category_name'] = Category.objects.get(slug=self.kwargs['slug'])
+        return context
+
+
+class ShopViewList(ListView):
+    """Вывод всех товаров"""
+    model = Product
+    paginate_by = 1
+    context_object_name = 'products'
+    template_name = 'products/shop_list.html'
+
+
+class Search(CategoryProductListView):
+    """Поиск товарав по название"""
+
+    def get_queryset(self):
+        """ <<Q>> Для комбинации сложных запросов"""
+        return Product.objects.filter(
+            Q(title__icontains=self.request.GET.get('q')) |
+            # поиск по title (не чувствителен к регистру)
+            Q(description__icontains=self.request.GET.get('q')) |
+            # # поиск по description (не чувствителен к регистру)
+            # Q(category__title__icontains=self.request.GET.get('q')) |
+            # # поиск по category__title (не чувствителен к регистру)
+            Q(brand__title__icontains=self.request.GET.get('q'))
+            # поиск по brand__title (не чувствителен к регистру)
+        )
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(Search, self).get_context_data(*args, **kwargs)
+        context['q'] = self.request.GET.get('q')
         return context
 
 

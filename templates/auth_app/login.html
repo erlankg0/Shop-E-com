@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="section-padding-80">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="mt-50  ">
+                    <div class="cart-page-heading mb-30">
+                        <h5 class="title">Authorization</h5>
+                    </div>
+                    <form method="post" class="justify-content-center">
+                        {#                        <div class="row">#}
+                        {% csrf_token %}
+                        <div class="col-12 mb-3">
+                            <label for="id_username">User Name <span>*</span></label>
+                            {{ form.username }}
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="id_password">Password <span>*</span></label>
+                            {{ form.password }}
+                        </div>
+                        <button class="btn essence-btn" type="submit">Enter</button>
+                        {#                        </div>#}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
