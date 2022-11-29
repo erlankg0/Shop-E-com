@@ -279,6 +279,10 @@ class Product(models.Model):
         Size,
         verbose_name='Размер',
     )
+    stoke = models.PositiveIntegerField(
+        default=1,
+        verbose_name='Колличество товара в складе'
+    )
     sold = models.PositiveIntegerField(
         default=0,
         verbose_name='Проданно',

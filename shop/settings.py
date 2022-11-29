@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # My apps
     'products.apps.ProductsConfig',
+    'cart.apps.CartConfig',
     'auth_app.apps.AuthAppConfig',
     # Extra apps
     'django_countries',
@@ -112,6 +113,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+# SESSION
+CART_SESSION_ID = 'cart'
 # AUTH
 AUTH_USER_MODEL = 'auth_app.CustomUser'
 LOGIN_REDIRECT_URL = 'home'

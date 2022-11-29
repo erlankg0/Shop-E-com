@@ -72,7 +72,7 @@ class CategoryProductListView(ListView):
 class ShopViewList(ListView):
     """Вывод всех товаров"""
     model = Product
-    paginate_by = 1
+    paginate_by = 9
     context_object_name = 'products'
     template_name = 'products/shop_list.html'
 

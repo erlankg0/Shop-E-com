@@ -46,7 +46,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('category', 'age_group', 'collection', 'image',)
         }),
         ('Цена', {
-            'fields': ('price', 'discount_price', 'discount',)
+            'fields': ('price', 'discount_price', 'discount', 'stoke',)
         }),
         ('Размер', {
             'fields': ('size', 'sold',)
