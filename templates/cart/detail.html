@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="mt-100">
+    {{ request.session.cart }}
+    </div>
+{% endblock content %}

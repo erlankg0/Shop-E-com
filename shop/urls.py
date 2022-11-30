@@ -6,8 +6,8 @@ from django.conf.urls.static import static
 admin.autodiscover()
 urlpatterns = [
                   path('admin/', admin.site.urls),
-                  path('s/', include('django.contrib.auth.urls')),
                   path('', include('products.urls')),
+                  path('cart/', include('cart.urls')),
                   path('auth/', include('auth_app.urls')),
                   path('chaining/', include('smart_selects.urls')),
                   path('ajax-select/', include('ajax_select.urls')),  # AJAX select
